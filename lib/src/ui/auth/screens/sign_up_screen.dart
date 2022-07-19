@@ -35,12 +35,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
       body: Form(
         key: _formKey,
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SizedBox(
+          padding: const EdgeInsets.only(top: 16.0, left: 16.0, right: 16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -56,17 +56,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ],
                   ),
                 ),
-                SizedBox(
-                  child: Column(
-                    children: [
-                      _socialMediaText(),
-                      _socialMediaButton(),
-                      _customRichText(context),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+              ),
+              if(MediaQuery.of(context).viewInsets.bottom == 0)
+              Column(
+                children: [
+                  _socialMediaText(),
+                  _socialMediaButton(),
+                  _customRichText(context),
+                ],
+              ),
+            ],
           ),
         ),
       ),
@@ -309,7 +308,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       );
 
   Widget _customRichText(BuildContext context) => Padding(
-        padding: const EdgeInsets.only(top: 30.0),
+        padding: const EdgeInsets.only(top: 30.0, bottom: 15.0),
         child: Center(
           child: GestureDetector(
             onTap: () {

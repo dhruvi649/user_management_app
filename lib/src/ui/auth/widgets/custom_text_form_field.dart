@@ -32,6 +32,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
 
   bool _isVisible = false;
   FocusNode focusNode = FocusNode();
+  final bool _color = false;
 
   @override
   Widget build(BuildContext context) {
@@ -49,15 +50,12 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
       onFieldSubmitted: widget.onSubmit,
       focusNode: widget.focusNode,
       keyboardType: widget.textInputType,
-      style: const TextStyle(fontSize: 16.0).copyWith(color: kBlackColor),
+      style: const TextStyle(fontSize: 16.0, color: kBlackColor),
       decoration: InputDecoration(
-
         hintText: widget.hintText,
-        label: Text(
-          widget.labelText,
-          style: TextStyle(
-            color: focusNode.hasFocus ? kGreenColor : kBlackColor,
-          ),
+        labelText: widget.labelText,
+        labelStyle: const TextStyle(
+          color: kGreenColor,
         ),
         hintStyle: const TextStyle(color: kGreyColor),
         enabledBorder: const UnderlineInputBorder(

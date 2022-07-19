@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "175164632227",
+    "project_id": "user-management-app-aae56",
+    "storage_bucket": "user-management-app-aae56.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:175164632227:android:8c2e4af80af57801ba6316",
+        "android_client_info": {
+          "package_name": "com.example.user_management_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "175164632227-623qpdctke5pehtjigh4hb5nni5f30se.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApa_bTliWc1lW4V19CJ7yoRqp9T2QwFoY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "175164632227-623qpdctke5pehtjigh4hb5nni5f30se.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

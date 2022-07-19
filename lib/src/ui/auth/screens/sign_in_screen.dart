@@ -1,5 +1,9 @@
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../api/auth_api.dart';
+import '../model/user_login_model.dart';
 import '../../../base/utils/constants/string_constants.dart';
 import '../../../base/utils/methods/validation_methods.dart';
 import '../../user_list/screens/user_list_screen.dart';
@@ -24,7 +28,17 @@ class _SignInScreenState extends State<SignInScreen> {
   final FocusNode _emailFocusNode = FocusNode();
   final FocusNode _passwordFocusNode = FocusNode();
   final _formKey = GlobalKey<FormState>();
-  FocusNode focusNode = FocusNode();
+
+  Future<String?> _getId() async {
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    AndroidDeviceInfo androidDeviceInfo = await deviceInfo.androidInfo;
+    return androidDeviceInfo.id;
+  }
+
+  Future<String?> _deviceToken() async {
+    await FirebaseMessaging.instance.getToken();
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,12 +46,12 @@ class _SignInScreenState extends State<SignInScreen> {
       body: Form(
         key: _formKey,
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SizedBox(
+          padding: const EdgeInsets.only(top: 16.0, right: 16.0, left: 16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -51,17 +65,16 @@ class _SignInScreenState extends State<SignInScreen> {
                     ],
                   ),
                 ),
-                SizedBox(
-                  child: Column(
-                    children: [
-                      _socialMediaText(),
-                      _socialMediaButton(),
-                      _customRichText(context),
-                    ],
-                  ),
+              ),
+              if (MediaQuery.of(context).viewInsets.bottom == 0)
+                Column(
+                  children: [
+                    _socialMediaText(),
+                    _socialMediaButton(),
+                    _customRichText(context),
+                  ],
                 ),
-              ],
-            ),
+            ],
           ),
         ),
       ),
@@ -69,7 +82,7 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   Widget _appLogo() => Padding(
-        padding: const EdgeInsets.only(top: 20.0),
+        padding: const EdgeInsets.only(top: 30.0),
         child: Image.asset(appLogo),
       );
 
@@ -188,16 +201,7 @@ class _SignInScreenState extends State<SignInScreen> {
               child: Align(
                 alignment: Alignment.topLeft,
                 child: ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const UserListScreen(),
-                        ),
-                      );
-                    }
-                  },
+                  onPressed: _onLoginButtonTap,
                   style: ElevatedButton.styleFrom(
                     primary: kGreenColor,
                     shadowColor: kBlackColor,
@@ -228,14 +232,35 @@ class _SignInScreenState extends State<SignInScreen> {
         ],
       );
 
+  void _onLoginButtonTap() async {
+    if (_formKey.currentState!.validate()) {
+      String? deviceId = await _getId();
+      String? tokenId = _deviceToken().toString();
+      await AuthAPI.loginUser(
+        UserLoginModel(
+          email: _emailController.text,
+          password: _passwordEditingController.text,
+          deviceId: deviceId.toString(),
+          deviceToken: tokenId.toString(),
+        ),
+      );
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const UserListScreen(),
+        ),
+      );
+    }
+  }
+
   Widget _socialMediaText() => const Padding(
-    padding: EdgeInsets.only(top: 50.0),
-    child: Center(
-      child: Text(
-        socialMediaText,
-      ),
-    ),
-  );
+        padding: EdgeInsets.only(top: 50.0),
+        child: Center(
+          child: Text(
+            socialMediaText,
+          ),
+        ),
+      );
 
   Widget _socialMediaButton() => Padding(
         padding: const EdgeInsets.only(top: 10.0),
@@ -268,7 +293,7 @@ class _SignInScreenState extends State<SignInScreen> {
       );
 
   Widget _customRichText(BuildContext context) => Padding(
-        padding: const EdgeInsets.only(top: 30.0),
+        padding: const EdgeInsets.only(top: 30.0, bottom: 10.0),
         child: Center(
           child: GestureDetector(
             onTap: () {

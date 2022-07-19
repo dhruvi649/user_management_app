@@ -19,24 +19,20 @@ class _UserListScreenState extends State<UserListScreen> {
       appBar: _customAppbar(),
       body: Padding(
         padding: const EdgeInsets.only(top: 16.0),
-        child: SingleChildScrollView(
-          child: Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topRight: Radius.circular(30.0),
-                topLeft: Radius.circular(30.0),
-              ),
-              color: kWhiteColor,
+        child: Container(
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.only(
+              topRight: Radius.circular(30.0),
+              topLeft: Radius.circular(30.0),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _notificationText(),
-                _customListView(),
-              ],
-            ),
+            color: kWhiteColor,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _notificationText(),
+              _customListView(),
+            ],
           ),
         ),
       ),
@@ -68,7 +64,7 @@ class _UserListScreenState extends State<UserListScreen> {
           shrinkWrap: true,
           scrollDirection: Axis.vertical,
           physics: const AlwaysScrollableScrollPhysics(),
-          itemCount: 30,
+          itemCount: 35,
           itemBuilder: (BuildContext context, int index) {
             return Slidable(
               endActionPane: ActionPane(

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:user_management_app/src/base/utils/constants/string_constants.dart';
+import '../../auth/api/auth_api.dart';
+import '../../../base/utils/constants/string_constants.dart';
 import '../../../base/utils/constants/asset_constants.dart';
 import '../../../base/utils/constants/color_constants.dart';
 import '../../auth/widgets/custom_clipper_button_shape.dart';
+import '../model/get_user_profile_model.dart';
 
 class UserDetailScreen extends StatefulWidget {
   const UserDetailScreen({Key? key}) : super(key: key);
@@ -12,6 +14,23 @@ class UserDetailScreen extends StatefulWidget {
 }
 
 class _UserDetailScreenState extends State<UserDetailScreen> {
+  late UserProfileModel _userProfileModel;
+  String _profileName = "";
+  String _profileEmail = "";
+
+  void _getProfile() async{
+    _userProfileModel = await AuthAPI.getUser(context);
+    _profileName = _userProfileModel.data.name;
+    _profileEmail = _userProfileModel.data.email;
+    print("Reaponse:--- ${_userProfileModel.data.toString()}");
+  }
+
+  @override
+  void initState() {
+    _getProfile();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,9 +65,9 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                           mainAxisSize: MainAxisSize.max,
                           children: [
                             _customText(userName),
-                            _customCard(context, nameText),
+                            _customCard(context, _profileName),
                             _customText(email),
-                            _customCard(context, emailId),
+                            _customCard(context, _profileEmail),
                             _logoutButton(),
                           ],
                         ),
