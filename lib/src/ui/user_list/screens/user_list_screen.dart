@@ -47,7 +47,7 @@ class _UserListScreenState extends State<UserListScreen> {
       );
 
   Widget _notificationText() => const Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: EdgeInsets.only(top: 16.0, left: 16.0),
         child: Text(
           "Notifications",
           style: TextStyle(
@@ -64,18 +64,19 @@ class _UserListScreenState extends State<UserListScreen> {
           shrinkWrap: true,
           scrollDirection: Axis.vertical,
           physics: const AlwaysScrollableScrollPhysics(),
-          itemCount: 35,
+          itemCount: 50,
           itemBuilder: (BuildContext context, int index) {
-            return Slidable(
-              endActionPane: ActionPane(
-                extentRatio: 0.15,
-                motion: const ScrollMotion(),
-                children: [
-                  GestureDetector(
-                    onTap: () {},
-                    child: Container(
-                      width: 60.0,
-                      height: 95.0,
+            return Align(
+              alignment: Alignment.centerRight,
+              child: Slidable(
+                endActionPane: ActionPane(
+                  extentRatio: 0.13,
+                  motion: const ScrollMotion(),
+                  children: [
+                    if(MediaQuery.of(context).viewInsets.right == 0)
+                    Container(
+                      width: 50.0,
+                      height: MediaQuery.of(context).size.height,
                       decoration: const BoxDecoration(
                         color: kSlidableColor,
                         borderRadius: BorderRadius.only(
@@ -83,21 +84,21 @@ class _UserListScreenState extends State<UserListScreen> {
                           bottomLeft: Radius.circular(5.0),
                         ),
                       ),
-                      child: const Icon(Icons.delete),
+                      child: const Icon(Icons.delete_outline, size: 30, color: kWhiteColor,),
                     ),
-                  ),
-                ],
-              ),
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const UserDetailScreen(),
-                    ),
-                  );
-                },
-                child: _customListTile(),
+                  ],
+                ),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const UserDetailScreen(),
+                      ),
+                    );
+                  },
+                  child: _customListTile(),
+                ),
               ),
             );
           },

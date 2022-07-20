@@ -29,10 +29,7 @@ class CustomTextFormField extends StatefulWidget {
 }
 
 class _CustomTextFormFieldState extends State<CustomTextFormField> {
-
   bool _isVisible = false;
-  FocusNode focusNode = FocusNode();
-  final bool _color = false;
 
   @override
   Widget build(BuildContext context) {
@@ -54,9 +51,13 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
       decoration: InputDecoration(
         hintText: widget.hintText,
         labelText: widget.labelText,
-        labelStyle: const TextStyle(
-          color: kGreenColor,
-        ),
+        floatingLabelStyle:
+        MaterialStateTextStyle.resolveWith((Set<MaterialState> states) {
+          final Color color = states.contains(MaterialState.focused)
+              ? kGreenColor
+              : kBlackColor;
+          return TextStyle(color: color, letterSpacing: 1.3);
+        }),
         hintStyle: const TextStyle(color: kGreyColor),
         enabledBorder: const UnderlineInputBorder(
           borderSide: BorderSide(
@@ -71,24 +72,22 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
           widget.icon,
           color: kBlackColor,
         ),
-        suffixIcon: widget.hintText
-            .contains("Password")
+        suffixIcon: widget.hintText.contains("Password")
             ? IconButton(
-          icon: Icon(
-            _isVisible ? CupertinoIcons.eye_slash : CupertinoIcons.eye,
-            color: kBlackColor,
-          ),
-          onPressed: () {
-            if (widget.hintText
-                .contains("Password")) {
-              setState(
-                    () {
-                  _isVisible = !_isVisible;
+                icon: Icon(
+                  _isVisible ? CupertinoIcons.eye_slash : CupertinoIcons.eye,
+                  color: kBlackColor,
+                ),
+                onPressed: () {
+                  if (widget.hintText.contains("Password")) {
+                    setState(
+                      () {
+                        _isVisible = !_isVisible;
+                      },
+                    );
+                  }
                 },
-              );
-            }
-          },
-        )
+              )
             : null,
       ),
     );
@@ -102,5 +101,4 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
     }
     return false;
   }
-
 }

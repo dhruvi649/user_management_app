@@ -12,6 +12,7 @@ const String googleText = "Google";
 const String appleText = "Apple";
 const String bottomText = "Don't have an account ?  ";
 const String signUpText = "Sign Up";
+const String forgot = "Forgot password ?";
 
 //signUp screen
 const String registrationText = "Please provide following details to registration into  the system.";

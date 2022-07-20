@@ -1,7 +1,9 @@
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../api/auth_api.dart';
 import '../model/user_login_model.dart';
 import '../../../base/utils/constants/string_constants.dart';
@@ -43,38 +45,62 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Form(
-        key: _formKey,
-        child: Padding(
-          padding: const EdgeInsets.only(top: 16.0, right: 16.0, left: 16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _appLogo(),
-                      _welcomeText(),
-                      _customText(),
-                      _profilePhoto(),
-                      _emailTextField(context),
-                      _passwordTextField(),
-                      _loginButton(context),
-                    ],
+      backgroundColor: kBackgroundeColor,
+      body: Stack(
+        children: [
+          _backGroundImage(),
+          Form(
+            key: _formKey,
+            child: Padding(
+              padding:
+                  const EdgeInsets.only(top: 16.0, right: 16.0, left: 16.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _appLogo(),
+                          _welcomeText(),
+                          _customText(),
+                          _profilePhoto(),
+                          _emailTextField(context),
+                          _passwordTextField(),
+                          _loginButton(context),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
+                  if (MediaQuery.of(context).viewInsets.bottom == 0)
+                    Column(
+                      children: [
+                        _socialMediaText(),
+                        _socialMediaButton(),
+                        _customRichText(context),
+                      ],
+                    ),
+                ],
               ),
-              if (MediaQuery.of(context).viewInsets.bottom == 0)
-                Column(
-                  children: [
-                    _socialMediaText(),
-                    _socialMediaButton(),
-                    _customRichText(context),
-                  ],
-                ),
-            ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _backGroundImage() {
+    return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          fit: BoxFit.cover,
+          colorFilter: ColorFilter.mode(
+            kBackgroundeColor.withOpacity(0.1),
+            BlendMode.dstATop,
+          ),
+          image: const NetworkImage(
+            'https://static.vecteezy.com/system/resources/previews/004/700/896/original/simple-k-logo-letter-isolated-on-white-background-vector.jpg',
           ),
         ),
       ),
@@ -161,7 +187,7 @@ class _SignInScreenState extends State<SignInScreen> {
   Widget _emailTextField(BuildContext context) => Padding(
         padding: const EdgeInsets.only(top: 10.0),
         child: CustomTextFormField(
-          icon: Icons.email_outlined,
+          icon: CupertinoIcons.mail,
           hintText: emailText,
           focusNode: _emailFocusNode,
           onSubmit: (String? _value) {
@@ -181,7 +207,7 @@ class _SignInScreenState extends State<SignInScreen> {
   Widget _passwordTextField() => Padding(
         padding: const EdgeInsets.only(top: 10.0),
         child: CustomTextFormField(
-          icon: Icons.lock_outline,
+          icon: CupertinoIcons.lock,
           hintText: passwordText,
           focusNode: _passwordFocusNode,
           onSubmit: (String? value) {},
@@ -194,6 +220,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
   Widget _loginButton(BuildContext context) => Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Padding(
             padding: const EdgeInsets.only(top: 20.0),
@@ -229,6 +256,10 @@ class _SignInScreenState extends State<SignInScreen> {
               clipper: CustomClipperButtonShape(),
             ),
           ),
+          const Text(
+            forgot,
+            style: TextStyle(color: kBlackColor, fontSize: 16.0),
+          ),
         ],
       );
 
@@ -236,7 +267,7 @@ class _SignInScreenState extends State<SignInScreen> {
     if (_formKey.currentState!.validate()) {
       String? deviceId = await _getId();
       String? tokenId = _deviceToken().toString();
-      await AuthAPI.loginUser(
+      final data = await AuthAPI.loginUser(
         UserLoginModel(
           email: _emailController.text,
           password: _passwordEditingController.text,
@@ -244,7 +275,10 @@ class _SignInScreenState extends State<SignInScreen> {
           deviceToken: tokenId.toString(),
         ),
       );
-      Navigator.pushReplacement(
+      SharedPreferences _sharedPreference =
+          await SharedPreferences.getInstance();
+      _sharedPreference.setString("AuthToken", data.data.token);
+      Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => const UserListScreen(),

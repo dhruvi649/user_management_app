@@ -7,3 +7,4 @@ const kLightGreyColor = Color(0xFFBDBDBD);
 const kWhiteColor = Colors.white;
 const kAppBarColor = Color(0xFF1c1c1c);
 const kSlidableColor = Color(0xFFfe738f);
+const kBackgroundeColor = Color(0xFFffffff);

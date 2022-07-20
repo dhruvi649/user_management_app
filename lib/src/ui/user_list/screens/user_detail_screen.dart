@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import '../../../base/api/url_factory.dart';
 import '../../auth/api/auth_api.dart';
 import '../../../base/utils/constants/string_constants.dart';
-import '../../../base/utils/constants/asset_constants.dart';
 import '../../../base/utils/constants/color_constants.dart';
 import '../../auth/widgets/custom_clipper_button_shape.dart';
 import '../model/get_user_profile_model.dart';
@@ -17,12 +17,17 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
   late UserProfileModel _userProfileModel;
   String _profileName = "";
   String _profileEmail = "";
+  String _profilePhoto = "";
+  String _age = "";
 
   void _getProfile() async{
     _userProfileModel = await AuthAPI.getUser(context);
-    _profileName = _userProfileModel.data.name;
-    _profileEmail = _userProfileModel.data.email;
-    print("Reaponse:--- ${_userProfileModel.data.toString()}");
+    setState(() {
+      _profileName = _userProfileModel.data.name;
+      _profileEmail = _userProfileModel.data.email;
+      _profilePhoto = baseUrl +_userProfileModel.data.profilePhoto;
+      _age = _userProfileModel.data.age.toString();
+    });
   }
 
   @override
@@ -38,47 +43,46 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
       appBar: _customAppbar(),
       body: Padding(
         padding: const EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Stack(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(top: 50),
-                    width: MediaQuery.of(context).size.width,
-                    height: 350,
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(30.0),
-                      ),
+        child: Column(
+          children: [
+            Stack(
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(top: 50),
+                  width: MediaQuery.of(context).size.width,
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(30.0),
                     ),
-                    child: Center(
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                          right: 16.0,
-                          left: 16.0,
-                          top: 50.0,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            _customText(userName),
-                            _customCard(context, _profileName),
-                            _customText(email),
-                            _customCard(context, _profileEmail),
-                            _logoutButton(),
-                          ],
-                        ),
+                  ),
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        right: 16.0,
+                        left: 16.0,
+                        top: 50.0,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          _customText(userName),
+                          _customCard(context, _profileName),
+                          _customText(email),
+                          _customCard(context, _profileEmail),
+                          _customText("Age"),
+                          _customCard(context, _age),
+                          _logoutButton(),
+                        ],
                       ),
                     ),
                   ),
-                  _userPhoto(),
-                ],
-              ),
-            ],
-          ),
+                ),
+                _userPhoto(),
+              ],
+            ),
+          ],
         ),
       ),
     );
@@ -97,30 +101,32 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
         ),
       );
 
-  Widget _userPhoto() => const Align(
+  Widget _userPhoto() => Align(
         alignment: Alignment.topCenter,
         child: SizedBox(
           child: CircleAvatar(
-            radius: 40.0,
-            backgroundColor: kLightGreyColor,
-            backgroundImage: AssetImage(userImage),
+            radius: 45.0,
+            backgroundImage: NetworkImage(_profilePhoto),
           ),
         ),
       );
 
   Widget _customCard(BuildContext context, String text) => SizedBox(
-        height: 40.0,
         width: MediaQuery.of(context).size.width,
         child: Card(
           elevation: 5,
+          color: kWhiteColor,
           child: Padding(
-            padding: const EdgeInsets.only(top: 5.0, left: 3.0),
-            child: Text(
-              text,
-              style: const TextStyle(
-                fontSize: 16.0,
-                fontWeight: FontWeight.bold,
-                color: kGreyColor,
+            padding: const EdgeInsets.only(top: 5.0, left: 5.0),
+            child: Padding(
+              padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
+              child: Text(
+                text,
+                style: const TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                  color: kGreyColor,
+                ),
               ),
             ),
           ),
@@ -128,7 +134,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
       );
 
   Widget _logoutButton() => Padding(
-        padding: const EdgeInsets.only(top: 30.0),
+        padding: const EdgeInsets.only(top: 30.0, bottom: 20.0),
         child: ClipPath(
           child: ElevatedButton(
             onPressed: () {},

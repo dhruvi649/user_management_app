@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import '../../../base/utils/constants/string_constants.dart';
@@ -32,40 +33,64 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Form(
-        key: _formKey,
-        child: Padding(
-          padding: const EdgeInsets.only(top: 16.0, left: 16.0, right: 16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _appLogo(),
-                      _welcomeText(),
-                      _customText(),
-                      _profilePhoto(),
-                      _usernameTextFormField(context),
-                      _emailTextFormField(context),
-                      _passwordTextFormField(context),
-                      _confirmPasswordFormField(),
-                      _submitButton(),
-                    ],
-                  ),
-                ),
-              ),
-              if(MediaQuery.of(context).viewInsets.bottom == 0)
-              Column(
+      backgroundColor: kBackgroundeColor,
+      body: Stack(
+        children: [
+          _backGroundImage(),
+          Form(
+            key: _formKey,
+            child: Padding(
+              padding:
+                  const EdgeInsets.only(top: 16.0, left: 16.0, right: 16.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _socialMediaText(),
-                  _socialMediaButton(),
-                  _customRichText(context),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _appLogo(),
+                          _welcomeText(),
+                          _customText(),
+                          _profilePhoto(),
+                          _usernameTextFormField(context),
+                          _emailTextFormField(context),
+                          _passwordTextFormField(context),
+                          _confirmPasswordFormField(),
+                          _submitButton(),
+                        ],
+                      ),
+                    ),
+                  ),
+                  if (MediaQuery.of(context).viewInsets.bottom == 0)
+                    Column(
+                      children: [
+                        _socialMediaText(),
+                        _socialMediaButton(),
+                        _customRichText(context),
+                      ],
+                    ),
                 ],
               ),
-            ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Container _backGroundImage() {
+    return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          fit: BoxFit.cover,
+          colorFilter: ColorFilter.mode(
+            kBackgroundeColor.withOpacity(0.1),
+            BlendMode.dstATop,
+          ),
+          image: const NetworkImage(
+            'https://static.vecteezy.com/system/resources/previews/004/700/896/original/simple-k-logo-letter-isolated-on-white-background-vector.jpg',
           ),
         ),
       ),
@@ -73,7 +98,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   Widget _appLogo() => Padding(
-        padding: const EdgeInsets.only(top: 20.0),
+        padding: const EdgeInsets.only(top: 15.0),
         child: Image.asset(appLogo),
       );
 
@@ -114,7 +139,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       );
 
   Widget _profilePhoto() => Padding(
-        padding: const EdgeInsets.only(top: 20.0),
+        padding: const EdgeInsets.only(top: 10.0),
         child: Row(
           children: [
             Container(
@@ -161,7 +186,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           },
           controller: _userEditingController,
           labelText: userText,
-          icon: Icons.person_outline,
+          icon: CupertinoIcons.person_crop_circle,
           validator: validateUsername,
           textInputType: TextInputType.name,
         ),
@@ -170,7 +195,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget _emailTextFormField(BuildContext context) => Padding(
         padding: const EdgeInsets.only(top: 10.0),
         child: CustomTextFormField(
-          icon: Icons.email_outlined,
+          icon: CupertinoIcons.mail,
           hintText: emailText,
           focusNode: _emailFocusNode,
           onSubmit: (String? _value) {
@@ -190,7 +215,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget _passwordTextFormField(BuildContext context) => Padding(
         padding: const EdgeInsets.only(top: 10.0),
         child: CustomTextFormField(
-          icon: Icons.lock_outline,
+          icon: CupertinoIcons.lock,
           hintText: passwordText,
           focusNode: _passwordFocusNode,
           onSubmit: (String? value) {
@@ -215,7 +240,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           onSubmit: (String? value) {},
           controller: _confirmPasswordController,
           labelText: confirmPasswordText,
-          icon: Icons.lock_outline,
+          icon: CupertinoIcons.lock,
           validator: validatePassword,
           textInputType: TextInputType.visiblePassword,
         ),
@@ -270,11 +295,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ],
       );
 
-  Widget _socialMediaText() => const Padding(
-        padding: EdgeInsets.only(top: 30.0),
-        child: Center(
-          child: Text(socialMediaText),
-        ),
+  Widget _socialMediaText() => const Center(
+        child: Text(socialMediaText),
       );
 
   Widget _socialMediaButton() => Padding(
