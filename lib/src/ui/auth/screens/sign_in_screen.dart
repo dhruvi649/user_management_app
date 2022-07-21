@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../widgets/custom_background_image.dart';
 import '../api/auth_api.dart';
 import '../model/user_login_model.dart';
 import '../../../base/utils/constants/string_constants.dart';
@@ -44,63 +45,42 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: kBackgroundeColor,
-      body: Stack(
-        children: [
-          _backGroundImage(),
-          Form(
-            key: _formKey,
-            child: Padding(
-              padding:
-                  const EdgeInsets.only(top: 16.0, right: 16.0, left: 16.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _appLogo(),
-                          _welcomeText(),
-                          _customText(),
-                          _profilePhoto(),
-                          _emailTextField(context),
-                          _passwordTextField(),
-                          _loginButton(context),
-                        ],
-                      ),
-                    ),
-                  ),
-                  if (MediaQuery.of(context).viewInsets.bottom == 0)
-                    Column(
+    return CustomBackGroundImage(
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Form(
+          key: _formKey,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 16.0, right: 16.0, left: 16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _socialMediaText(),
-                        _socialMediaButton(),
-                        _customRichText(context),
+                        _appLogo(),
+                        _welcomeText(),
+                        _customText(),
+                        _profilePhoto(),
+                        _emailTextField(context),
+                        _passwordTextField(),
+                        _loginButton(context),
                       ],
                     ),
-                ],
-              ),
+                  ),
+                ),
+                if (MediaQuery.of(context).viewInsets.bottom == 0)
+                  Column(
+                    children: [
+                      _socialMediaText(),
+                      _socialMediaButton(),
+                      _customRichText(context),
+                    ],
+                  ),
+              ],
             ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _backGroundImage() {
-    return Container(
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          fit: BoxFit.cover,
-          colorFilter: ColorFilter.mode(
-            kBackgroundeColor.withOpacity(0.1),
-            BlendMode.dstATop,
-          ),
-          image: const NetworkImage(
-            'https://static.vecteezy.com/system/resources/previews/004/700/896/original/simple-k-logo-letter-isolated-on-white-background-vector.jpg',
           ),
         ),
       ),
@@ -265,19 +245,19 @@ class _SignInScreenState extends State<SignInScreen> {
 
   void _onLoginButtonTap() async {
     if (_formKey.currentState!.validate()) {
-      String? deviceId = await _getId();
-      String? tokenId = _deviceToken().toString();
-      final data = await AuthAPI.loginUser(
+      String? _deviceId = await _getId();
+      String? _tokenId = _deviceToken().toString();
+      final _data = await AuthAPI.loginUser(
         UserLoginModel(
           email: _emailController.text,
           password: _passwordEditingController.text,
-          deviceId: deviceId.toString(),
-          deviceToken: tokenId.toString(),
+          deviceId: _deviceId.toString(),
+          deviceToken: _tokenId.toString(),
         ),
       );
       SharedPreferences _sharedPreference =
           await SharedPreferences.getInstance();
-      _sharedPreference.setString("AuthToken", data.data.token);
+      _sharedPreference.setString("AuthToken", _data.data.token);
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -327,7 +307,7 @@ class _SignInScreenState extends State<SignInScreen> {
       );
 
   Widget _customRichText(BuildContext context) => Padding(
-        padding: const EdgeInsets.only(top: 30.0, bottom: 10.0),
+        padding: const EdgeInsets.only(top: 30.0, bottom: 20.0),
         child: Center(
           child: GestureDetector(
             onTap: () {

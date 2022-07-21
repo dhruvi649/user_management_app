@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import '../widgets/custom_background_image.dart';
 import '../../../base/utils/constants/string_constants.dart';
 import '../../../base/utils/methods/validation_methods.dart';
 import '../../user_list/screens/user_list_screen.dart';
@@ -32,16 +33,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: kBackgroundeColor,
-      body: Stack(
-        children: [
-          _backGroundImage(),
-          Form(
+    return CustomBackGroundImage(
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          body: Form(
             key: _formKey,
             child: Padding(
               padding:
-                  const EdgeInsets.only(top: 16.0, left: 16.0, right: 16.0),
+              const EdgeInsets.only(top: 16.0, left: 16.0, right: 16.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -75,25 +74,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
             ),
           ),
-        ],
-      ),
-    );
-  }
-
-  Container _backGroundImage() {
-    return Container(
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          fit: BoxFit.cover,
-          colorFilter: ColorFilter.mode(
-            kBackgroundeColor.withOpacity(0.1),
-            BlendMode.dstATop,
-          ),
-          image: const NetworkImage(
-            'https://static.vecteezy.com/system/resources/previews/004/700/896/original/simple-k-logo-letter-isolated-on-white-background-vector.jpg',
-          ),
         ),
-      ),
     );
   }
 

@@ -20,12 +20,12 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
   String _profilePhoto = "";
   String _age = "";
 
-  void _getProfile() async{
+  void _getProfile() async {
     _userProfileModel = await AuthAPI.getUser(context);
     setState(() {
       _profileName = _userProfileModel.data.name;
       _profileEmail = _userProfileModel.data.email;
-      _profilePhoto = baseUrl +_userProfileModel.data.profilePhoto;
+      _profilePhoto = baseUrl + _userProfileModel.data.profilePhoto;
       _age = _userProfileModel.data.age.toString();
     });
   }
@@ -51,7 +51,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                   margin: const EdgeInsets.only(top: 50),
                   width: MediaQuery.of(context).size.width,
                   decoration: const BoxDecoration(
-                    color: Colors.white,
+                    color: kWhiteColor,
                     borderRadius: BorderRadius.all(
                       Radius.circular(30.0),
                     ),
@@ -59,10 +59,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                   child: Center(
                     child: Padding(
                       padding: const EdgeInsets.only(
-                        right: 16.0,
-                        left: 16.0,
-                        top: 50.0,
-                      ),
+                          right: 16.0, left: 16.0, top: 50.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.max,
@@ -106,6 +103,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
         child: SizedBox(
           child: CircleAvatar(
             radius: 45.0,
+            backgroundColor: kWhiteColor,
             backgroundImage: NetworkImage(_profilePhoto),
           ),
         ),
@@ -117,16 +115,13 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
           elevation: 5,
           color: kWhiteColor,
           child: Padding(
-            padding: const EdgeInsets.only(top: 5.0, left: 5.0),
-            child: Padding(
-              padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
-              child: Text(
-                text,
-                style: const TextStyle(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
-                  color: kGreyColor,
-                ),
+            padding: const EdgeInsets.only(top: 5.0, left: 5.0, bottom: 10.0),
+            child: Text(
+              text,
+              style: const TextStyle(
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold,
+                color: kGreyColor,
               ),
             ),
           ),

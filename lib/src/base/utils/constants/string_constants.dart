@@ -29,3 +29,7 @@ const String email = "Email";
 const String emailId = "dhruvipandya2001@gmail.com";
 const String appbarText = "User Profile";
 const String logoutText = "Logout";
+
+//notification
+
+const String notificationText = "Notifications";
