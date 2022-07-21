@@ -19,7 +19,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
   String _profileEmail = "";
   String _profilePhoto = "";
   String _age = "";
-  bool isLoading = false;
+  bool _isLoading = false;
 
   void _getProfile() async {
     _userProfileModel = await AuthAPI.getUser(context);
@@ -28,7 +28,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
       _profileEmail = _userProfileModel.data.email;
       _profilePhoto = baseUrl + _userProfileModel.data.profilePhoto;
       _age = _userProfileModel.data.age.toString();
-      isLoading = true;
+      _isLoading = true;
     });
   }
 
@@ -45,7 +45,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
       appBar: _customAppbar(),
       body: Padding(
         padding: const EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
-        child: isLoading ? Column(
+        child: _isLoading ? Column(
           children: [
             Stack(
               children: [
