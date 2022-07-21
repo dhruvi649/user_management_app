@@ -19,6 +19,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
   String _profileEmail = "";
   String _profilePhoto = "";
   String _age = "";
+  bool isLoading = false;
 
   void _getProfile() async {
     _userProfileModel = await AuthAPI.getUser(context);
@@ -27,6 +28,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
       _profileEmail = _userProfileModel.data.email;
       _profilePhoto = baseUrl + _userProfileModel.data.profilePhoto;
       _age = _userProfileModel.data.age.toString();
+      isLoading = true;
     });
   }
 
@@ -43,7 +45,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
       appBar: _customAppbar(),
       body: Padding(
         padding: const EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
-        child: Column(
+        child: isLoading ? Column(
           children: [
             Stack(
               children: [
@@ -61,18 +63,18 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                       padding: const EdgeInsets.only(
                           right: 16.0, left: 16.0, top: 50.0),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          _customText(userName),
-                          _customCard(context, _profileName),
-                          _customText(email),
-                          _customCard(context, _profileEmail),
-                          _customText("Age"),
-                          _customCard(context, _age),
-                          _logoutButton(),
-                        ],
-                      ),
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                _customText(userName),
+                                _customCard(context, _profileName),
+                                _customText(email),
+                                _customCard(context, _profileEmail),
+                                _customText("Age"),
+                                _customCard(context, _age),
+                                _logoutButton(),
+                              ],
+                            )
                     ),
                   ),
                 ),
@@ -80,7 +82,8 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
               ],
             ),
           ],
-        ),
+        )
+            : const Center(child: CircularProgressIndicator()),
       ),
     );
   }

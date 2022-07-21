@@ -231,7 +231,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 20.0),
+            padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
             child: ClipPath(
               child: Align(
                 alignment: Alignment.topLeft,

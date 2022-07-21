@@ -203,7 +203,7 @@ class _SignInScreenState extends State<SignInScreen> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 20.0),
+            padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
             child: ClipPath(
               child: Align(
                 alignment: Alignment.topLeft,
@@ -265,6 +265,8 @@ class _SignInScreenState extends State<SignInScreen> {
         ),
       );
     }
+    _emailController.clear();
+    _passwordEditingController.clear();
   }
 
   Widget _socialMediaText() => const Padding(
