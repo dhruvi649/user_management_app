@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import '../../../base/utils/constants/string_constants.dart';
-import 'user_detail_screen.dart';
 import '../../../base/utils/constants/asset_constants.dart';
 import '../../../base/utils/constants/color_constants.dart';
 
@@ -96,12 +95,7 @@ class _UserListScreenState extends State<UserListScreen> {
                 ),
                 child: GestureDetector(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const UserDetailScreen(),
-                      ),
-                    );
+                    Navigator.of(context).pushNamed('routeUserProfile');
                   },
                   child: _customListTile(index),
                 ),

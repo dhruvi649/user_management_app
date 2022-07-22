@@ -6,7 +6,6 @@ import 'package:image_picker/image_picker.dart';
 import '../widgets/custom_background_image.dart';
 import '../../../base/utils/constants/string_constants.dart';
 import '../../../base/utils/methods/validation_methods.dart';
-import '../../user_list/screens/user_list_screen.dart';
 import '../widgets/social_media_button.dart';
 import '../widgets/custom_clipper_button_shape.dart';
 import '../widgets/custom_text_form_field.dart';
@@ -33,16 +32,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final FocusNode _confirmPasswordFocus = FocusNode();
   final _formKey = GlobalKey<FormState>();
   File? _photo;
-
-//   setState(() {
-//   if (pickedFile != null) {
-//   _photo = File(pickedFile.path);
-//   updateProfile();
-//   } else {
-//   print('No image selected.');
-//   }
-//   });
-// }
 
   @override
   Widget build(BuildContext context) {
@@ -149,12 +138,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     _showPicker(context);
                   },
                   child: CircleAvatar(
-                    radius: 20.0,
-                    backgroundColor: kLightGreyColor,
-                    child: SvgPicture.asset(
-                      profileImage,
-                      height: 25.0,
-                    ),
+                    child: _photo != null
+                        ? CircleAvatar(
+                            radius: 50.0,
+                            backgroundImage: FileImage(
+                              _photo!,
+                            ),
+                          )
+                        : CircleAvatar(
+                            radius: 20.0,
+                            backgroundColor: kLightGreyColor,
+                            child: SvgPicture.asset(
+                              profileImage,
+                              height: 25.0,
+                            ),
+                          ),
                   ),
                 ),
               ),
@@ -172,38 +170,42 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   void _showPicker(context) {
     showModalBottomSheet(
-        context: context,
-        builder: (BuildContext bc) {
-          return SafeArea(
-            child: Wrap(
-              children: <Widget>[
-                ListTile(
-                    leading: const Icon(Icons.photo_library),
-                    title: const Text('Gallery'),
-                    onTap: () {
-                      chooseImage();
-                      Navigator.pop(context);
-                    }),
-                // ListTile(
-                //   leading: const Icon(Icons.photo_camera),
-                //   title: const Text('Camera'),
-                //   onTap: () {
-                //     imgFromCamera();
-                //     Navigator.of(context).pop();
-                //   },
-                // ),
-              ],
+      context: context,
+      builder: (BuildContext bc) {
+        return SafeArea(
+          child: GestureDetector(
+            onTap: () {
+              chooseImage();
+              Navigator.pop(context);
+            },
+            child: SizedBox(
+              height: 60.0,
+              child: Padding(
+                padding:
+                    const EdgeInsets.only(top: 8.0, bottom: 8.0, left: 16.0),
+                child: Row(
+                  children: const [
+                    Icon(Icons.photo_library),
+                    SizedBox(
+                      width: 15.0,
+                    ),
+                    Text("Gallery"),
+                  ],
+                ),
+              ),
             ),
-          );
-        });
+          ),
+        );
+      },
+    );
   }
 
   chooseImage() async {
     XFile? xFile = await ImagePicker().pickImage(source: ImageSource.gallery);
     _photo = File(xFile!.path);
-    // setState(() {
-    //   updateProfile();
-    // });
+    setState(() {
+      _photo;
+    });
   }
 
   Widget _usernameTextFormField(BuildContext context) => Padding(
@@ -299,13 +301,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 child: ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const UserListScreen(),
-                        ),
-                      );
+                      Navigator.of(context).pushNamed('routeUserList');
                     }
+                    _emailController.clear();
+                    _userEditingController.clear();
+                    _passwordEditingController.clear();
+                    _confirmPasswordController.clear();
+                    _photo = null;
                   },
                   style: ElevatedButton.styleFrom(
                     primary: kGreenColor,

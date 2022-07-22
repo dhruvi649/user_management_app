@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../../base/utils/constants/color_constants.dart';
-import 'sign_in_screen.dart';
 import '../../../base/utils/constants/asset_constants.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -17,13 +16,8 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     Timer(
       const Duration(seconds: 3),
-          () => Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const SignInScreen(),
-        ),
-      ),
-    );
+          () => Navigator.of(context).pushReplacementNamed('routeSignIn'),
+        );
   }
 
   @override

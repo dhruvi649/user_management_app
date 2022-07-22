@@ -9,7 +9,6 @@ import '../api/auth_api.dart';
 import '../model/user_login_model.dart';
 import '../../../base/utils/constants/string_constants.dart';
 import '../../../base/utils/methods/validation_methods.dart';
-import '../../user_list/screens/user_list_screen.dart';
 import 'sign_up_screen.dart';
 import '../widgets/social_media_button.dart';
 import '../widgets/custom_clipper_button_shape.dart';
@@ -258,12 +257,7 @@ class _SignInScreenState extends State<SignInScreen> {
       SharedPreferences _sharedPreference =
           await SharedPreferences.getInstance();
       _sharedPreference.setString("AuthToken", _data.data.token);
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const UserListScreen(),
-        ),
-      );
+      Navigator.of(context).pushNamed('routeUserList');
     }
     _emailController.clear();
     _passwordEditingController.clear();
