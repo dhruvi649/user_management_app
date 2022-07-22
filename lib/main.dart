@@ -1,7 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:user_management_app/src/ui/auth/screens/splash_screen.dart';
-import 'src/ui/auth/screens/sign_in_screen.dart';
+import 'src/ui/auth/screens/splash_screen.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();

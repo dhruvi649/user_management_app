@@ -1,6 +1,8 @@
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:image_picker/image_picker.dart';
 import '../widgets/custom_background_image.dart';
 import '../../../base/utils/constants/string_constants.dart';
 import '../../../base/utils/methods/validation_methods.dart';
@@ -30,51 +32,61 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final FocusNode _userFocusNode = FocusNode();
   final FocusNode _confirmPasswordFocus = FocusNode();
   final _formKey = GlobalKey<FormState>();
+  File? _photo;
+
+//   setState(() {
+//   if (pickedFile != null) {
+//   _photo = File(pickedFile.path);
+//   updateProfile();
+//   } else {
+//   print('No image selected.');
+//   }
+//   });
+// }
 
   @override
   Widget build(BuildContext context) {
     return CustomBackGroundImage(
-        child: Scaffold(
-          backgroundColor: Colors.transparent,
-          body: Form(
-            key: _formKey,
-            child: Padding(
-              padding:
-              const EdgeInsets.only(top: 16.0, left: 16.0, right: 16.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _appLogo(),
-                          _welcomeText(),
-                          _customText(),
-                          _profilePhoto(),
-                          _usernameTextFormField(context),
-                          _emailTextFormField(context),
-                          _passwordTextFormField(context),
-                          _confirmPasswordFormField(),
-                          _submitButton(),
-                        ],
-                      ),
-                    ),
-                  ),
-                  if (MediaQuery.of(context).viewInsets.bottom == 0)
-                    Column(
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Form(
+          key: _formKey,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 16.0, left: 16.0, right: 16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _socialMediaText(),
-                        _socialMediaButton(),
-                        _customRichText(context),
+                        _appLogo(),
+                        _welcomeText(),
+                        _customText(),
+                        _profilePhoto(),
+                        _usernameTextFormField(context),
+                        _emailTextFormField(context),
+                        _passwordTextFormField(context),
+                        _confirmPasswordFormField(),
+                        _submitButton(),
                       ],
                     ),
-                ],
-              ),
+                  ),
+                ),
+                if (MediaQuery.of(context).viewInsets.bottom == 0)
+                  Column(
+                    children: [
+                      _socialMediaText(),
+                      _socialMediaButton(),
+                      _customRichText(context),
+                    ],
+                  ),
+              ],
             ),
           ),
         ),
+      ),
     );
   }
 
@@ -132,12 +144,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               child: Padding(
                 padding: const EdgeInsets.all(6.0),
-                child: CircleAvatar(
-                  radius: 20.0,
-                  backgroundColor: kLightGreyColor,
-                  child: SvgPicture.asset(
-                    profileImage,
-                    height: 25.0,
+                child: GestureDetector(
+                  onTap: () {
+                    _showPicker(context);
+                  },
+                  child: CircleAvatar(
+                    radius: 20.0,
+                    backgroundColor: kLightGreyColor,
+                    child: SvgPicture.asset(
+                      profileImage,
+                      height: 25.0,
+                    ),
                   ),
                 ),
               ),
@@ -152,6 +169,42 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ],
         ),
       );
+
+  void _showPicker(context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return SafeArea(
+            child: Wrap(
+              children: <Widget>[
+                ListTile(
+                    leading: const Icon(Icons.photo_library),
+                    title: const Text('Gallery'),
+                    onTap: () {
+                      chooseImage();
+                      Navigator.pop(context);
+                    }),
+                // ListTile(
+                //   leading: const Icon(Icons.photo_camera),
+                //   title: const Text('Camera'),
+                //   onTap: () {
+                //     imgFromCamera();
+                //     Navigator.of(context).pop();
+                //   },
+                // ),
+              ],
+            ),
+          );
+        });
+  }
+
+  chooseImage() async {
+    XFile? xFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    _photo = File(xFile!.path);
+    // setState(() {
+    //   updateProfile();
+    // });
+  }
 
   Widget _usernameTextFormField(BuildContext context) => Padding(
         padding: const EdgeInsets.only(top: 10.0),
@@ -222,7 +275,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
           controller: _confirmPasswordController,
           labelText: confirmPasswordText,
           icon: CupertinoIcons.lock,
-          validator: validatePassword,
+          validator: (String? cPassword) {
+            if (cPassword!.trim().isEmpty) {
+              return "Please enter password";
+            }
+            if (cPassword != _passwordEditingController.text) {
+              return "Password does not match";
+            }
+            return null;
+          },
           textInputType: TextInputType.visiblePassword,
         ),
       );
@@ -238,7 +299,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 child: ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      Navigator.pushReplacement(
+                      Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => const UserListScreen(),
@@ -282,31 +343,28 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   Widget _socialMediaButton() => Padding(
         padding: const EdgeInsets.only(top: 15.0),
-        child: Padding(
-          padding: const EdgeInsets.only(right: 10.0, left: 10.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SocialMediaButton(
-                svgPictureUrl: facebookIcon,
-                height: 20.0,
-                text: facebookText,
-                color: Colors.blue[800]!,
-              ),
-              const SocialMediaButton(
-                svgPictureUrl: googleIcon,
-                height: 20.0,
-                text: googleText,
-                color: kBlackColor,
-              ),
-              const SocialMediaButton(
-                svgPictureUrl: appleIcon,
-                height: 30.0,
-                text: appleText,
-                color: kBlackColor,
-              ),
-            ],
-          ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SocialMediaButton(
+              svgPictureUrl: facebookIcon,
+              height: 20.0,
+              text: facebookText,
+              color: Colors.blue[800]!,
+            ),
+            const SocialMediaButton(
+              svgPictureUrl: googleIcon,
+              height: 20.0,
+              text: googleText,
+              color: kBlackColor,
+            ),
+            const SocialMediaButton(
+              svgPictureUrl: appleIcon,
+              height: 30.0,
+              text: appleText,
+              color: kBlackColor,
+            ),
+          ],
         ),
       );
 

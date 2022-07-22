@@ -279,34 +279,31 @@ class _SignInScreenState extends State<SignInScreen> {
       );
 
   Widget _socialMediaButton() => Padding(
-        padding: const EdgeInsets.only(top: 10.0),
-        child: Padding(
-          padding: const EdgeInsets.only(right: 10.0, left: 10.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SocialMediaButton(
-                svgPictureUrl: facebookIcon,
-                height: 20.0,
-                text: facebookText,
-                color: Colors.blue[800]!,
-              ),
-              const SocialMediaButton(
-                svgPictureUrl: googleIcon,
-                height: 20.0,
-                text: googleText,
-                color: kBlackColor,
-              ),
-              const SocialMediaButton(
-                svgPictureUrl: appleIcon,
-                height: 30.0,
-                text: appleText,
-                color: kBlackColor,
-              ),
-            ],
-          ),
+    padding: const EdgeInsets.only(top: 15.0),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        SocialMediaButton(
+          svgPictureUrl: facebookIcon,
+          height: 20.0,
+          text: facebookText,
+          color: Colors.blue[800]!,
         ),
-      );
+        const SocialMediaButton(
+          svgPictureUrl: googleIcon,
+          height: 20.0,
+          text: googleText,
+          color: kBlackColor,
+        ),
+        const SocialMediaButton(
+          svgPictureUrl: appleIcon,
+          height: 30.0,
+          text: appleText,
+          color: kBlackColor,
+        ),
+      ],
+    ),
+  );
 
   Widget _customRichText(BuildContext context) => Padding(
         padding: const EdgeInsets.only(top: 30.0, bottom: 20.0),

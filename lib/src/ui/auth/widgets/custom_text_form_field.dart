@@ -75,7 +75,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
         suffixIcon: widget.hintText.contains("Password")
             ? IconButton(
                 icon: Icon(
-                  _isVisible ? CupertinoIcons.eye_slash : CupertinoIcons.eye,
+                  _isVisible ? CupertinoIcons.eye : CupertinoIcons.eye_slash,
                   color: kBlackColor,
                 ),
                 onPressed: () {
